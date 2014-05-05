@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Simple tests => ;
+use Test::Simple tests => 24;
 use Math::Palindrome ':all';
 
 
