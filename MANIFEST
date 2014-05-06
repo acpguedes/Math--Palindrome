@@ -5,5 +5,7 @@ Todo
 Changes
 Makefile.PL
 lib/Math/Palindrome.pm
-t/001_load.t
+t/is_palindrome.t
+t/next_palindrome.t
+t/previous_palindrome.t
 t/others.t
