@@ -123,8 +123,12 @@ sub _previous_even_digits {
 
 ##############################################################
 #Now, all export functions
-#confirm if the number is palindrome 
-sub is_palindrome {($_[0] == reverse $_[0]) ? return 1 : return 0}
+#confirm if the number is palindrome
+sub is_palindrome {
+        my ($x, $validate) = @_;
+        croak "Just work with natural numbers!\n" if $validate && $x !~ /^\d+$/;
+        return $x eq reverse $x;
+}
 #require the next palindrome 
 sub next_palindrome {
 	my $num = shift;
