@@ -39,4 +39,4 @@ ok(!previous_palindrome(6) != 5);
 ok(!previous_palindrome(5) != 4);
 ok(!previous_palindrome(4) != 3);
 ok(!previous_palindrome(3) != 2);
-ok(!previous_palindrome(2) != 1);!
+ok(!previous_palindrome(2) != 1);
