@@ -1,11 +1,11 @@
 package Math::Palindrome;
 
-#Yes, i'd like a dush good pratices
+# Enable strict and warnings for safer code
 use strict;
 use warnings;
-#And I so like fucking everything
+# Import croak for error reporting
 use Carp 'croak';
-#Let's help you work more easy, if you can't you may not be here, get out
+# Set up export lists
 
 BEGIN {
     use Exporter;
@@ -159,20 +159,19 @@ sub decreasing_sequence {
 	for (1..$len){
 		$r[$_ -1] = $ini = previous_palindrome($ini)
 	}
-	return @r;
+        return @r;
 }
-#making more easy for the all asshole
-#require just last number of the decreasing sequence
+# Return the last number of a decreasing sequence
 sub palindrome_before {
-	my $len = $_[0];
-	my $ini = $_[1] || 100;
-	my $r;
-	for (1..$len){
+        my $len = $_[0];
+        my $ini = $_[1] || 100;
+        my $r;
+        for (1..$len){
 		$r = $ini = previous_palindrome($ini)
 	}
 	return $r;
 }
-#require just last number of the increasing sequence
+# Return the last number of an increasing sequence
 sub palindrome_after {
 	my $len = $_[0];
 	my $ini = $_[1] || 0;
