@@ -33,8 +33,9 @@ ok(!is_palindrome(10000));
 ok(is_palindrome(10001));
 ok(!is_palindrome(100000));
 ok(is_palindrome(100001));
-
-ok(is_palindrome('abcba'));
-ok(!is_palindrome('abc'));
-eval { is_palindrome('foo', 1) };
-ok($@);
+eval { is_palindrome('abc') };
+ok($@ =~ /non-negative integer/);
+eval { is_palindrome(-1) };
+ok($@ =~ /non-negative integer/);
+eval { is_palindrome(1.5) };
+ok($@ =~ /non-negative integer/);

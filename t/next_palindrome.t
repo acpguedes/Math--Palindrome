@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Simple tests => 24;
+use Test::Simple tests => 27;
 use Math::Palindrome ':all';
 
 
@@ -30,3 +30,9 @@ ok(!next_palindrome(99) != 101);
 ok(next_palindrome(99) == 101);
 ok(!next_palindrome(999) != 1001);
 ok(next_palindrome(999) == 1001);
+eval { next_palindrome('abc') };
+ok($@ =~ /non-negative integer/);
+eval { next_palindrome(-1) };
+ok($@ =~ /non-negative integer/);
+eval { next_palindrome(1.5) };
+ok($@ =~ /non-negative integer/);

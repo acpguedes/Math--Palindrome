@@ -5,6 +5,7 @@ use strict;
 use warnings;
 # Import croak for error reporting
 use Carp 'croak';
+use Scalar::Util 'looks_like_number';
 # Set up export lists
 
 BEGIN {
@@ -29,6 +30,15 @@ BEGIN {
 
 # How many digits exist here 
 sub _digits_size {return length shift}
+
+# Validate that a value is a non-negative integer
+sub _validate_non_negative_integer {
+        my $value = shift;
+        croak "Argument must be a non-negative integer"
+                unless defined $value
+                        && looks_like_number($value)
+                        && $value =~ /^\d+$/;
+}
 
 #Working with just one digits
 #If want a previous value
@@ -97,30 +107,34 @@ sub _previous_even_digits { return _mirror_first_half(shift, 'previous'); }
 #Now, all export functions
 #confirm if the number is palindrome
 sub is_palindrome {
-        my ($x, $validate) = @_;
-        croak "Just work with natural numbers!\n" if $validate && $x !~ /^\d+$/;
+        my ($x) = @_;
+        _validate_non_negative_integer($x);
         return $x eq reverse $x;
 }
 #require the next palindrome 
 sub next_palindrome {
-	my $num = shift;
-	my $size = _digits_size($num);
+        my $num = shift;
+        _validate_non_negative_integer($num);
+        my $size = _digits_size($num);
 	if ($size == 1){return _next_one_digits($num)}
 	elsif ($size % 2 != 0){return _next_odd_digits($num)}
 	else{return _next_even_digits($num)}
 }
 #require the previous palindrome 
 sub previous_palindrome {
-	my $num = shift;
-	my $size = _digits_size($num);
+        my $num = shift;
+        _validate_non_negative_integer($num);
+        my $size = _digits_size($num);
 	if ($size == 1){return _previous_one_digits($num)}
 	elsif ($size % 2 != 0){return _previous_odd_digits($num)}
 	else{return _previous_even_digits($num)}
 }
 #require a crescent sequence
 sub increasing_sequence {
-	my $len = $_[0];
-	my $ini = $_[1] || 0;
+        my $len = $_[0];
+        my $ini = $_[1] || 0;
+        _validate_non_negative_integer($len);
+        _validate_non_negative_integer($ini);
 	my @r;
 	for (1..$len){
 		$r[$_ - 1] = $ini = next_palindrome($ini)
@@ -129,8 +143,10 @@ sub increasing_sequence {
 }
 #require a decrescent sequence
 sub decreasing_sequence {
-	my $len = $_[0];
-	my $ini = $_[1] || 100;
+        my $len = $_[0];
+        my $ini = $_[1] || 100;
+        _validate_non_negative_integer($len);
+        _validate_non_negative_integer($ini);
 	my @r;
 	for (1..$len){
 		$r[$_ -1] = $ini = previous_palindrome($ini)
@@ -141,6 +157,8 @@ sub decreasing_sequence {
 sub palindrome_before {
         my $len = $_[0];
         my $ini = $_[1] || 100;
+        _validate_non_negative_integer($len);
+        _validate_non_negative_integer($ini);
         my $r;
         for (1..$len){
 		$r = $ini = previous_palindrome($ini)
@@ -149,8 +167,10 @@ sub palindrome_before {
 }
 # Return the last number of an increasing sequence
 sub palindrome_after {
-	my $len = $_[0];
-	my $ini = $_[1] || 0;
+        my $len = $_[0];
+        my $ini = $_[1] || 0;
+        _validate_non_negative_integer($len);
+        _validate_non_negative_integer($ini);
 	my $r;
 	for (1..$len){
 		$r = $ini = next_palindrome($ini)
