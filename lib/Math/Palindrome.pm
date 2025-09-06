@@ -36,88 +36,60 @@ sub _previous_one_digits {
 	my $n = shift;
 	$n != 0 ? (return ($n - 1)) : croak "Just work with natural numbers!\n";	
 }
-#If want a next value 
+#If want a next value
 sub _next_one_digits {
-	my $n = shift;
-	$n != 9 ? (return ($n + 1)) : (return 11);
+        my $n = shift;
+        $n != 9 ? (return ($n + 1)) : (return 11);
 }
-#Finish, maybe one day I'll optimise 
+#Finish, maybe one day I'll optimise
 
-#Now other stance, working with odd digits 
-#for next 
-sub _next_odd_digits {
-	my $n = shift;
-	my $r;
-	
-	my $n_1 = substr $n, 0, (length $n)/2; #first half part, without middle num(if exist)
-	my $n_2 = substr $n, -((length $n)/2); #second half part, without middle num(if exist)
-	my $n_3 = substr $n, 0, -((length $n)/2); #first half part, with middle num(if exist)
-	
-	if ($n == 999){$r = 1001}
-	elsif ($n_1 <= reverse $n_2){
-		$n_3++;
-		$r = $n_3 . (reverse substr $n_3, 0, ((length $n_3)-1));
-		
-	}
-	else{$r = $n_3 . (reverse substr $n_3, 0, ((length$n_3)-1))}
-	
-	return $r;
+#Mirror first half to build next or previous palindrome
+sub _mirror_first_half {
+        my ($n, $dir) = @_;
+        my $len  = length $n;
+        my $half = int($len / 2);
+
+        if ($dir eq 'next') {
+                return '1' . ('0' x ($len - 1)) . '1' if $n =~ /^9+$/;
+        }
+        else {
+                return '9' x ($len - 1) if $n <= 10**($len - 1) + 1;
+        }
+
+        if ($len % 2) {    # odd digits
+                my $left = substr $n, 0, $half;        # without middle
+                my $right = substr $n, -$half;         # without middle
+                my $mid = substr $n, 0, $half + 1;     # with middle
+
+                if (($dir eq 'next'     && $left <= reverse $right)
+                        || ($dir eq 'previous' && $left >= reverse $right)) {
+                        $mid += $dir eq 'next' ? 1 : -1;
+                }
+                return $mid . reverse substr($mid, 0, -1);
+        }
+        else {             # even digits
+                my $left  = substr $n, 0, $half;
+                my $right = substr $n, $half;
+
+                if (($dir eq 'next'     && $left <= reverse $right)
+                        || ($dir eq 'previous' && $left >= reverse $right)) {
+                        $left += $dir eq 'next' ? 1 : -1;
+                }
+                return $left . reverse $left;
+        }
 }
-#for previous 
-sub _previous_odd_digits {
-	my $n = shift;
-	my $r ;
-	
-	my $n_1 = substr $n, 0, (length $n)/2; #first half part, without middle num(if exist)
-	my $n_2 = substr $n, -((length $n)/2); #second half part, without middle num(if exist)
-	my $n_3 = substr $n, 0, -((length $n)/2); #first half part, with middle num(if exist)
-	
-	if ($n <= 101){$r = 99}
-	elsif ($n_1 >= reverse $n_2){
-		$n_3--;
-		$r = $n_3 . (reverse substr $n_3, 0, ((length $n_3)-1));
-		
-	}
-	else{$r = $n_3 . (reverse substr $n_3, 0, ((length$n_3)-1))}
-	
-	return $r;
-}
+
+#Now other stance, working with odd digits
+#for next
+sub _next_odd_digits { return _mirror_first_half(shift, 'next'); }
+#for previous
+sub _previous_odd_digits { return _mirror_first_half(shift, 'previous'); }
 
 #Finally, working with even number
-#for next 
-sub _next_even_digits {
-	my $n = shift;
-	my $r;
-	
-	my $n_1 = substr $n, 0, -((length $n)/2);#first half part
-	my $n_2 = substr $n, ((length $n)/2); #second half part
-	
-	if ($n == 99){$r = 101}
-	elsif ($n_1 <= reverse$n_2){
-		$n_1++;
-		$r = $n_1 . reverse $n_1;
-	}
-	else{$r = $n_1 . reverse $n_1}
-	
-	return $r;
-}
-#for previous 
-sub _previous_even_digits {
-	my $n = shift;
-	my $r;
-	
-	my $n_1 = substr $n, 0, -((length $n)/2);#first half part
-	my $n_2 = substr $n, ((length $n)/2); #second half part
-	
-	if ($n <= 11){$r = 9}
-	elsif ($n_1 >= reverse $n_2){
-		$n_1--;
-		$r = $n_1 . reverse $n_1;
-	}
-	else{$r = $n_1 . reverse $n_1}
-	
-	return $r;
-}
+#for next
+sub _next_even_digits { return _mirror_first_half(shift, 'next'); }
+#for previous
+sub _previous_even_digits { return _mirror_first_half(shift, 'previous'); }
 #End, without these part, nothing may work
 ##############################################################
 
