@@ -2,10 +2,12 @@
 
 use strict;
 use warnings;
-use Test::Simple tests => 30;
+use Test::Simple tests => 32;
 use Math::Palindrome 'is_palindrome';
 
 
+ok(is_palindrome(0));
+ok(is_palindrome('010'));
 ok(is_palindrome(1));
 ok(is_palindrome(2));
 ok(is_palindrome(3));
